@@ -4,7 +4,6 @@ import PlayerEditor from './components/PlayerEditor';
 import Controls from './components/Controls';
 import type { Player } from './types';
 
-// Function to generate fresh players
 const generateInitialPlayers = (): Player[] => 
   Array.from({ length: 15 }, (_, i) => ({
     id: i + 1,
@@ -50,25 +49,28 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-800 text-white flex">
+    // BOTC Gothic Background Gradient
+    <div className="min-h-screen bg-[#0b0410] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#2a1245] via-[#0b0410] to-black text-slate-200 flex font-sans">
       <div className="flex-1 p-10 flex flex-col items-center">
-        <div className="w-full max-w-2xl flex justify-between bg-slate-900 p-4 rounded-lg shadow-lg border border-slate-700 mb-8">
+        
+        {/* Game Header Controls - Dark Glassmorphism */}
+        <div className="w-full max-w-2xl flex justify-between bg-[#160a26]/80 backdrop-blur-md p-4 rounded-xl shadow-2xl border border-[#3a1d5e] mb-8">
           <div className="flex flex-col">
-            <label className="text-sm text-slate-400 font-bold mb-1">Player Count: {playerCount}</label>
+            <label className="text-sm text-purple-300 font-bold mb-1">Player Count: {playerCount}</label>
             <input 
               type="range" min="5" max="15" value={playerCount}
               onChange={(e) => setPlayerCount(parseInt(e.target.value))}
-              className="w-48 cursor-pointer"
+              className="w-48 cursor-pointer accent-purple-500"
             />
           </div>
           
           <div className="flex space-x-4 items-center">
-            <label className="text-sm text-slate-400 font-bold">Current Time:</label>
-            <select value={globalPhase} onChange={(e) => setGlobalPhase(e.target.value as 'Day'|'Night')} className="bg-slate-800 border border-slate-600 rounded p-1">
+            <label className="text-sm text-purple-300 font-bold">Current Time:</label>
+            <select value={globalPhase} onChange={(e) => setGlobalPhase(e.target.value as 'Day'|'Night')} className="bg-black/50 border border-[#3a1d5e] rounded p-1 text-purple-200 focus:outline-none focus:border-purple-400">
               <option value="Night">Night</option>
               <option value="Day">Day</option>
             </select>
-            <select value={globalDay} onChange={(e) => setGlobalDay(parseInt(e.target.value))} className="bg-slate-800 border border-slate-600 rounded p-1">
+            <select value={globalDay} onChange={(e) => setGlobalDay(parseInt(e.target.value))} className="bg-black/50 border border-[#3a1d5e] rounded p-1 text-purple-200 focus:outline-none focus:border-purple-400">
               {[1,2,3,4,5,6,7,8,9,10].map(d => <option key={d} value={d}>{d}</option>)}
             </select>
           </div>
@@ -78,7 +80,8 @@ export default function App() {
         <Controls onRunSolver={handleRunSolver} onReset={handleReset} />
       </div>
 
-      <div className="w-[450px] bg-slate-900 border-l border-slate-700 p-6 shadow-xl overflow-y-auto">
+      {/* Sidebar Panel */}
+      <div className="w-[450px] bg-[#11071c]/95 border-l border-[#3a1d5e] p-6 shadow-2xl overflow-y-auto backdrop-blur-xl">
         {selectedPlayer ? (
            <PlayerEditor 
               player={selectedPlayer} 
@@ -87,7 +90,10 @@ export default function App() {
               globalDay={globalDay}
            />
         ) : (
-           <p className="text-slate-400 text-center mt-10">Click a player in the Grimoire to edit their claims.</p>
+           <div className="h-full flex flex-col items-center justify-center opacity-50">
+             <div className="w-24 h-24 rounded-full border-4 border-dashed border-[#3a1d5e] mb-4"></div>
+             <p className="text-purple-300 text-center font-bold">Select a player from the<br/>Grimoire to edit claims.</p>
+           </div>
         )}
       </div>
     </div>
