@@ -2,9 +2,11 @@ export interface Player {
   id: number;
   name: string;
   isDead: boolean;
-  dayDied: number | null;
+  deathPhase: 'Day' | 'Night' | null;
+  deathCause: 'Execution' | 'Slayer' | 'Virgin' | null;
+  deathDay: number | null;
   claimedRole: string | null;
-  claims: any; // We'll expand this later (e.g., Washerwoman saw X and Y as Z)
+  claims: Record<number, any>;
   constraints: {
     mustBeEvil: boolean;
     mustBeGood: boolean;
