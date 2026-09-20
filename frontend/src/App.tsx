@@ -1,122 +1,57 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import Grimoire from './components/Grimoire';
+import PlayerEditor from './components/PlayerEditor';
+import type { Player } from './types';
+import Controls from './components/Controls';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Generate 7 default players
+const initialPlayers: Player[] = Array.from({ length: 7 }, (_, i) => ({
+  id: i + 1,
+  name: `Player ${i + 1}`,
+  isDead: false,
+  dayDied: null,
+  claimedRole: null,
+  claims: {},
+  constraints: {
+    mustBeEvil: false,
+    mustBeGood: false,
+    hasFalseInfo: false,
+  },
+}));
+
+export default function App() {
+  const [players, setPlayers] = useState<Player[]>(initialPlayers);
+  const [selectedPlayerId, setSelectedPlayerId] = useState<number | null>(null);
+
+  // Find the currently selected player object
+  const selectedPlayer = players.find(p => p.id === selectedPlayerId) || null;
+
+  // This function updates a specific player in our array
+  const handleUpdatePlayer = (updatedPlayer: Player) => {
+    setPlayers(players.map(p => p.id === updatedPlayer.id ? updatedPlayer : p));
+  };
+
+  const handleRunSolver = () => {
+    console.log("Sending to Python...", players);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="min-h-screen bg-slate-800 text-white flex">
+      {/* Left Side: The Grimoire */}
+      <div className="flex-1 p-10 flex flex-col items-center">
+        <h1 className="text-3xl font-bold mb-8">BOTC Solver: Trouble Brewing</h1>
+        <Grimoire players={players} onPlayerSelect={(p) => setSelectedPlayerId(p.id)} />
+        <Controls onRunSolver={handleRunSolver} />
+      </div>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* Right Side: The Editor Panel */}
+      <div className="w-96 bg-slate-900 border-l border-slate-700 p-6 shadow-xl">
+        {selectedPlayer ? (
+           <PlayerEditor player={selectedPlayer} updatePlayer={handleUpdatePlayer} />
+        ) : (
+           <p className="text-slate-400 text-center mt-10">Click a player in the Grimoire to edit their claims.</p>
+        )}
+      </div>
+    </div>
+  );
 }
-
-export default App
