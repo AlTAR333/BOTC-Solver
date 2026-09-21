@@ -32,7 +32,6 @@ export default function PlayerEditor({ player, updatePlayer, activePlayers, glob
     .filter(p => p.id !== player.id)
     .map(p => <option key={p.id} value={p.id} className="text-purple-200">{p.name}</option>);
 
-  // Component to render color-coded role options
   const ColoredRoleOptions = () => (
     <>
       <optgroup label="Townsfolk" className="bg-black text-blue-400">
@@ -147,6 +146,41 @@ export default function PlayerEditor({ player, updatePlayer, activePlayers, glob
               )}
             </div>
           )}
+        </div>
+
+        {/* SOLVER CONSTRAINTS */}
+        <div className="bg-black/30 p-3 rounded-lg border border-[#3a1d5e] space-y-3">
+          <h3 className="text-xs text-purple-400 font-bold uppercase tracking-wider border-b border-[#3a1d5e] pb-1 mb-2">Solver Constraints</h3>
+          
+          <div className="flex items-center justify-between px-1">
+            <div className="flex items-center space-x-2">
+              <input 
+                type="checkbox" 
+                id="mustBeGood" 
+                checked={player.constraints.mustBeGood}
+                onChange={(e) => updatePlayer({ 
+                  ...player, 
+                  constraints: { ...player.constraints, mustBeGood: e.target.checked, mustBeEvil: e.target.checked ? false : player.constraints.mustBeEvil } 
+                })}
+                className="w-4 h-4 accent-blue-500 cursor-pointer"
+              />
+              <label htmlFor="mustBeGood" className="text-sm font-bold text-blue-400 cursor-pointer">Force Good</label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input 
+                type="checkbox" 
+                id="mustBeEvil" 
+                checked={player.constraints.mustBeEvil}
+                onChange={(e) => updatePlayer({ 
+                  ...player, 
+                  constraints: { ...player.constraints, mustBeEvil: e.target.checked, mustBeGood: e.target.checked ? false : player.constraints.mustBeGood } 
+                })}
+                className="w-4 h-4 accent-red-500 cursor-pointer"
+              />
+              <label htmlFor="mustBeEvil" className="text-sm font-bold text-red-500 cursor-pointer">Force Evil</label>
+            </div>
+          </div>
         </div>
 
         {/* INFO BOXES */}
